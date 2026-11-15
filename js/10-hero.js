@@ -21,9 +21,14 @@
       const lista = (vert ? video.dataset.v : video.dataset.h).split(',').map((s) => { const [u, w] = s.trim().split(' '); return { u, w: +w }; });
       // 14/11 (Fábio): no telemóvel em pé vai sempre o filme alto (1080), em wifi ou em dados. O iPhone mostra o filme
       // a 1424 px de largura e o 720 ficava ampliado 2x. O leve (720) só com «Poupança de dados» (Save-Data) ligada.
-      if (vert) return (navigator.connection && navigator.connection.saveData ? lista[0] : lista[lista.length - 1]).u;
-      // 13/11 (João: «máximo 4K possível»): quase todos os píxeis reais do ecrã; a montagem nativa vai até 2560
-      const precisa = innerWidth * Math.min(devicePixelRatio || 1, 2) * 0.9;
+      // 15/11 (Ricardo: «o vídeo de fundo parece ter pouca qualidade»): os filmes foram refeitos mais nítidos (sufixo s);
+      // em rede móvel lenta (3G ou pior, segundo o browser) o telemóvel leva o 1080, que arranca mais depressa;
+      // o número de Mb/s do Chrome não serve (no arranque diz 1,35 mesmo em wifi rápida)
+      const cx = navigator.connection;
+      if (vert) return (cx && cx.saveData ? lista[0] : cx && /(^|-)[23]g$/.test(cx.effectiveType || '') ? lista[lista.length - 2] : lista[lista.length - 1]).u;
+      // 13/11 (João: «máximo 4K possível»): os píxeis reais do ecrã; 15/11: os filmes limpos com IA já chegam nítidos
+      // no tamanho exato, por isso um ecrã de 1920 leva o 1920 (mais leve) e só os ecrãs retina ou 4K levam o 2560
+      const precisa = innerWidth * Math.min(devicePixelRatio || 1, 2);
       return (lista.find((o) => o.w >= precisa) || lista[lista.length - 1]).u;
     };
     let visivel = true;
