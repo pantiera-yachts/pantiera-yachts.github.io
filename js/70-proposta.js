@@ -56,10 +56,10 @@
 
   /* ---------- a rota: o caminho desenha-se ao tamanho real, as boias pousam nele ---------- */
   const rota = $('[data-percurso]', sec), svg = $('.percurso-mar', rota), pFundo = $('.percurso-fundo', rota), pFeita = $('[data-percurso-feita]', rota);
-  // o Pantiera 32 visto de cima anda ao longo da linha com o scroll da secção; a linha cheia marca o passo do formulário
+  // o Pantiera 32 visto de cima navega na ponta da linha cheia: avança a cada resposta e a cada passo do formulário (já não depende do scroll)
   const barco = $('[data-percurso-barco]', rota), boias = $$('[data-boia]', rota);
   const MOLDE = pFundo.getAttribute('d');
-  let L = 1, sB = [0, 0, 0, 0], sAgora = null, anim = null;
+  let L = 1, sB = [0, 0, 0, 0], sAgora = null, anim = null, meioBarco = 0;
   // curva única do site, cubic-bezier(.16,1,.3,1), resolvida em JS para a linha que se enche
   const bez = (x1, y1, x2, y2) => {
     const c = (a, b) => [3 * a, 3 * (b - a) - 3 * a, 1 - 3 * a - 3 * (b - a) + 3 * a];
@@ -71,6 +71,8 @@
   const pousa = (s) => {
     sAgora = s;
     pFeita.style.strokeDasharray = `${s.toFixed(1)} ${L + 10}`;
+    // a proa encosta à ponta da linha: a boia do passo fica à vista, nunca debaixo do barco
+    poeBarco(Math.max(Math.min(30, sB[0]), s - meioBarco));
   };
 
   /* ---------- o barco da rota: ligado ao scroll, só transform, proa na tangente da curva ----------
@@ -92,18 +94,6 @@
     const v = `translate(${x.toFixed(1)}px,${y.toFixed(1)}px) translate(-50%,-50%) rotate(${ang.toFixed(2)}deg)`;
     if (v !== escrito) { escrito = v; barco.style.transform = v; }
   };
-  const fimBarco = () => sB[form.hidden ? 3 : 2];
-  DA.aCada((t, { y, h }) => {
-    if (reduz) { poeBarco(sB[(form.hidden ? 4 : passo) - 1]); return; } // sem movimento: o barco espera no passo em que a pessoa está
-    const c = DA.caixa(sec); if (!c.height) return;
-    // em scroll da página: começa quando o topo da secção chega a três quartos do ecrã e acaba quando o meio da secção
-    // passa pelo meio do ecrã; os dois limites cabem no scroll que a página tem (em /quote/ a secção abre a página)
-    const maxY = Math.max(0, DA.caixa(document.documentElement).height - h);
-    const ini = clamp(c.top - h * 0.75, 0, maxY), fim = clamp(c.top + c.height * 0.5 - h * 0.5, 0, maxY);
-    const k = fim - ini < 40 ? 1 : clamp((y - ini) / (fim - ini));
-    const s0 = Math.min(30, fimBarco()); // começa meio barco para dentro: a popa nunca sai da linha
-    poeBarco(s0 + k * (fimBarco() - s0));
-  });
   const desenha = () => {
     const W = rota.clientWidth, H = 64; // a altura do mar é fixa no CSS (.percurso-mar)
     if (!W) return;
@@ -122,12 +112,26 @@
     });
     boias.forEach((b, i) => { const p = pFundo.getPointAtLength(sB[i]); b.style.setProperty('--bx', p.x + 'px'); b.style.setProperty('--by', p.y + 'px'); });
     if (anim) { cancelAnimationFrame(anim); anim = null; }
-    pousa(sB[(form.hidden ? 4 : passo) - 1]);
-    amostrar(); DA.remede();
+    meioBarco = barco.offsetWidth / 2 + 8;
+    amostrar(); pousa(alvoRota()); DA.remede();
   };
-  const navega = (n) => {
-    const alvo = sB[n - 1];
+  /* o ponto da rota em que o barco deve estar: na boia do passo, mais um avanço pelo que já se respondeu nesse passo
+     (até 45 % do caminho para a boia seguinte); o barco só chega à boia seguinte quando se carrega em Continuar */
+  const feitoNoPasso = () => {
+    if (passo === 1) return marcados('quero').length ? 1 : 0;
+    if (passo === 2) return (val('zona') ? 0.7 : 0) + (val('motor') ? 0.3 : 0);
+    const email = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(val('email'));
+    return ((val('nome') ? 1 : 0) + (email ? 1 : 0) + (form.elements.ok?.checked ? 1 : 0)) / 3;
+  };
+  function alvoRota() {
+    if (form.hidden) return sB[3];
+    const a = sB[passo - 1], b = sB[passo];
+    return a + (b - a) * 0.45 * clamp(feitoNoPasso());
+  }
+  const segue = () => navega(alvoRota());
+  const navega = (alvo) => {
     if (sAgora === null || reduz) return pousa(alvo);
+    if (Math.abs(alvo - sAgora) < 0.5) return;
     if (anim) cancelAnimationFrame(anim);
     const de = sAgora, t0 = performance.now(), dur = ms('--duration-cena');
     const passoA = (t) => { const k = clamp((t - t0) / dur); pousa(de + (alvo - de) * curva(k)); anim = k < 1 ? requestAnimationFrame(passoA) : null; };
@@ -161,10 +165,10 @@
     if (t.name === 'quero') marcaBercos();
     if (t.name === 'zona') pintaDealer(true);
     if (t.name === 'via' && tentou[3]) valida(3, false);
-    actualizaPlaca();
+    actualizaPlaca(); segue();
     if (tentou[passo]) valida(passo, false);
   });
-  form.addEventListener('input', () => { if (tentou[passo]) valida(passo, false); });
+  form.addEventListener('input', () => { if (tentou[passo]) valida(passo, false); segue(); });
 
   /* ---------- passo 2: a zona mostra quem responde ---------- */
   const contactos = (d, tag = 'p') => `<${tag} class="dealer-c">${d.tel ? `<a href="tel:${esc(d.tel.replace(/[^+\d]/g, ''))}">${esc(d.tel)}</a>` : ''}${d.email ? `<a href="mailto:${esc(d.email)}">${esc(d.email)}</a>` : ''}</${tag}>`;
@@ -229,7 +233,7 @@
       b.disabled = k > max; b.closest('li').classList.toggle('feito', k < n || (k < max && k !== n));
       if (k === n) b.setAttribute('aria-current', 'step'); else b.removeAttribute('aria-current');
     });
-    navega(n);
+    segue();
     fechaPlaca();
     if (rolar) { tituloVisivel(); $(`[data-passo="${n}"] h3`, form).focus({ preventScroll: true }); }
   }
@@ -297,7 +301,7 @@
     placa.classList.add('selada');
     form.hidden = true; obrigado.hidden = false; sec.dataset.agora = 'fim';
     $$('[data-ir]', rota).forEach((b) => { b.disabled = true; b.removeAttribute('aria-current'); b.closest('li').classList.add('feito'); });
-    navega(4);
+    navega(sB[3]);
     fechaPlaca();
     const yFim = estreito.matches ? rolaFim() : tituloVisivel(); $('[data-obrigado-t]', obrigado).focus({ preventScroll: true });
     if (porWa) { const j = window.open(wa, '_blank', 'noopener'); if (j) j.opener = null; }
@@ -325,7 +329,7 @@
     let mudou = false;
     if (q) $$('[name=quero]', form).forEach((c) => { const on = q.split(',').includes(c.dataset.queroId); if (on && !c.checked) { c.checked = true; mudou = true; } });
     if (z) { const r = $(`[name=zona][data-zona="${z}"]`, form); if (r && !r.checked) { r.checked = true; mudou = true; pintaDealer(true); } }
-    if (mudou) { marcaBercos(); actualizaPlaca(); if (tentou[1]) valida(1, false); }
+    if (mudou) { marcaBercos(); actualizaPlaca(); segue(); if (tentou[1]) valida(1, false); }
   };
   document.addEventListener('click', (e) => {
     const a = e.target.closest?.('[data-quero],[data-pedido-zona]'); if (!a || sec.contains(a)) return;
