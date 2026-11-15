@@ -3020,3 +3020,7 @@ html.ecra-mbaixo .navegar{position:static}
 }
 /* (verificação 14/11) no telemóvel já não há palco preso: a sombra preta da costura cortava 2 px da linha vermelha */
 @media (max-width:899px){.so-reels .banda-cfg{box-shadow:none}}
+/* 15/11 (acabamento): títulos com as linhas equilibradas (nada de uma palavra sozinha na última linha, como o «top» de
+   «Consola central y hard top») e parágrafos sem viúvas; os browsers que não conhecem a regra ficam como estavam */
+h1,h2,h3,.cap-t,.passo-t h3{text-wrap:balance}
+p,.cap-p,figcaption{text-wrap:pretty}
