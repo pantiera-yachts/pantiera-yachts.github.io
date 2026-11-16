@@ -41,7 +41,7 @@
       // 16/11 (cliente: «reels em escala reduzida, ligeiramente inclinados como na versão antiga»): fotografias pousadas
       // numa mesa. O do centro inteiro e inclinado 1,5°; os vizinhos espreitam dos lados, mais pequenos e com outro ângulo.
       // Sem desfoque (o filtro em vídeo custa e suja a imagem): a hierarquia faz-se com escala e opacidade.
-      const x = d * (largo ? 74 : 66); // em % da largura do próprio cartão
+      const x = d * (largo ? 74 : 60); // em % da largura do próprio cartão
       const rot = a === 0 ? 1.5 : (d < 0 ? -2 : 2.5) * (a === 1 ? 1 : 0.6);
       li.style.transform = `translate3d(${x}%,0,0) scale(${Math.max(0.7, 1 - a * 0.13)}) rotate(${rot}deg)`;
       li.style.zIndex = String(50 - a);

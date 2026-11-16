@@ -2,37 +2,42 @@
    Carrega depois de estilo.css. Usa classes novas (.f1-filmes, .f1-mesa, .f1-tinta) para não herdar as regras do
    palco preso (.so-reels, .prancha, .banda-cfg), que ficam mortas no estilo.css. */
 
-/* ---------- 1. a junção hero → papel ----------
-   Antes: papel a 20 % de alfa por cima da fotografia (gradiente sRGB longo). Papel translúcido sobre mar escuro dá um
-   cinzento-azulado baço: era a «lama». Agora a fotografia assenta primeiro em tinta (#0b0c0d, escuro sobre escuro,
-   sem cinzento), com paragens em curva suave para não se ver o degrau, e o papel começa num corte limpo, como uma
-   folha pousada por cima da fotografia. */
-.hero::after{height:calc(36*var(--u,1svh));bottom:-1px;
-  background:linear-gradient(180deg,rgb(11 12 13 / 0) 0%,rgb(11 12 13 / .03) 14%,rgb(11 12 13 / .1) 28%,rgb(11 12 13 / .22) 42%,rgb(11 12 13 / .4) 56%,rgb(11 12 13 / .6) 70%,rgb(11 12 13 / .8) 83%,rgb(11 12 13 / .94) 93%,#0b0c0d 100%)}
-@supports (background:linear-gradient(in oklab,red,blue)){
-  .hero::after{background:linear-gradient(in oklab 180deg,rgb(11 12 13 / 0) 0%,rgb(11 12 13 / .03) 14%,rgb(11 12 13 / .1) 28%,rgb(11 12 13 / .22) 42%,rgb(11 12 13 / .4) 56%,rgb(11 12 13 / .6) 70%,rgb(11 12 13 / .8) 83%,rgb(11 12 13 / .94) 93%,#0b0c0d 100%)}
-}
-/* o bloco de papel de 12vh no fundo do hero (era o par da margem negativa da secção antiga): com a tinta por cima
-   virava uma faixa cinzenta chapada. A secção já não sobe por cima do hero, por isso sai. */
+/* ---------- 1. a junção hero → papel: uma neblina de horizonte ----------
+   2.ª volta (cliente: «melhora o blend, não o tires»). Dois tempos, sem costura:
+   a) no fundo do hero a fotografia assenta em tinta #0b0c0d (escuro sobre escuro: nunca cinzento, com qualquer fotograma);
+   b) no topo da secção, .f1-bruma leva a tinta ao papel #ecebe7 por um azul-petróleo escuro e uma bruma azul acinzentada
+      clara, como o mar a perder-se no horizonte. As paragens saem de f1-ferramentas/bruma.py: luz em curva seno (sem
+      degrau nas pontas) e um sopro de azul (h≈225°) que nasce do preto e morre antes do papel, tudo calculado em OKLab,
+      por isso o meio nunca é um cinzento morto. Por cima, um grão fino em soft-light contra o bandeamento (só no meio da rampa: no preto o soft-light clareia e criava um degrau na costura, por isso o grão entra e sai por máscara). */
 .hero::before{display:none}
+.hero::after{height:calc(30*var(--u,1svh));bottom:-1px;
+  background:linear-gradient(180deg,rgb(11 12 13 / 0.000) 0.0%,rgb(11 12 13 / 0.072) 8.3%,rgb(11 12 13 / 0.184) 16.7%,rgb(11 12 13 / 0.311) 25.0%,rgb(11 12 13 / 0.440) 33.3%,rgb(11 12 13 / 0.566) 41.7%,rgb(11 12 13 / 0.681) 50.0%,rgb(11 12 13 / 0.782) 58.3%,rgb(11 12 13 / 0.866) 66.7%,rgb(11 12 13 / 0.929) 75.0%,rgb(11 12 13 / 0.972) 83.3%,rgb(11 12 13 / 0.994) 91.7%,#0b0c0d 100%)}
 .travessia{padding-top:0!important}
+.f1-bruma{position:relative;height:calc(44*var(--u,1svh));min-height:300px;margin-top:-1px;
+  background:linear-gradient(180deg,#0b0c0d 0.0%,#0f1213 6.25%,#131a1d 12.5%,#1a2429 18.75%,#223137 25.0%,#2d3f47 31.25%,#3b5059 37.5%,#4b626b 43.75%,#5e757e 50.0%,#728890 56.25%,#889ba2 62.5%,#9eadb2 68.75%,#b3bdc0 75.0%,#c7cccc 81.25%,#d7d9d6 87.5%,#e4e3df 93.75%,#ecebe7 100.0%)}
+.f1-bruma::after{content:"";position:absolute;inset:0;pointer-events:none;opacity:.3;mix-blend-mode:soft-light;-webkit-mask:linear-gradient(180deg,transparent 0%,transparent 14%,#000 40%,#000 70%,transparent 96%);mask:linear-gradient(180deg,transparent 0%,transparent 14%,#000 40%,#000 70%,transparent 96%);background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 0 0 0 0 1'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E") 0 0/180px 180px}
+@media (min-width:900px){.hero::after{height:calc(46*var(--u,1svh))}.f1-bruma{height:calc(50*var(--u,1svh))}}
 
 /* ---------- 2. a secção: papel, tinta, título e duas tintas como na versão antiga ---------- */
-.f1-filmes{--papel:#ecebe7;--tinta:#0b0c0d;--f1-w:max(150px,min(57vw,236px,(calc(100*var(--u,1svh)) - 320px) * 9 / 16));
-  margin-top:0;padding:calc(12*var(--u,1svh)) 0 calc(11*var(--u,1svh));background:var(--papel);color:var(--tinta);overflow-x:clip;position:relative}
+.f1-filmes{--papel:#ecebe7;--tinta:#0b0c0d;--f1-w:max(140px,min(44vw,190px,(calc(100*var(--u,1svh)) - 320px) * 9 / 16));--f1-d:min(76vw,330px);
+  margin-top:0;padding:0 0 calc(9*var(--u,1svh));background:var(--papel);color:var(--tinta);overflow-x:clip;position:relative}
 .f1-filmes .duas-tintas::before{content:none}
 @media (min-width:901px){.f1-filmes .duas-tintas::before{content:"Reels oficiales"}}
 html.sem-mov .f1-filmes .duas-tintas .p{color:var(--tinta)}
 
 /* ---------- 3. a mesa: o traçado da popa em tinta leve e os reels pousados por cima ---------- */
-.f1-mesa{position:relative;margin-top:calc(6*var(--u,1svh));padding-top:44px}
+/* o título só começa com o papel já limpo: a bruma acaba antes da grelha */
+.f1-filmes>.grelha{padding-top:calc(4*var(--u,1svh))}
+/* telemóvel: o desenho inteiro entre o texto e os reels; o terço de baixo fica por trás dos cartões */
+.f1-mesa{position:relative;margin-top:calc(3*var(--u,1svh));padding-top:calc(var(--f1-d) * 1462 / 1400 * .6)}
 .f1-tinta{position:absolute;z-index:0;pointer-events:none;aspect-ratio:1400/1462;background:var(--tinta);opacity:.4;
-  -webkit-mask:url(../img/linhas-popa-1400.webp) center/contain no-repeat;mask:url(../img/linhas-popa-1400.webp) center/contain no-repeat;
-  /* telemóvel: o desenho sai pela esquerda e sobe acima do cartão; o casco e o hard top respiram à volta do reel */
-  width:min(136vw,600px);left:calc(50% - min(136vw,600px) * .59);top:-9%}
-.f1-mesa .reels{position:relative;z-index:1;inset:auto;width:100%;padding:0;display:grid;justify-items:center;gap:30px;outline:none}
+  /* o desenho original acaba a direito do lado esquerdo (o casco cortado): uma segunda máscara esbate essa ponta */
+  -webkit-mask:url(../img/linhas-popa-1400.webp) center/contain no-repeat,linear-gradient(90deg,transparent 0%,#000 22%);-webkit-mask-composite:source-in;
+  mask:url(../img/linhas-popa-1400.webp) center/contain no-repeat,linear-gradient(90deg,transparent 0%,#000 22%);mask-composite:intersect;
+  width:var(--f1-d);left:calc(50% - var(--f1-d) * .5);top:0}
+.f1-mesa .reels{position:relative;z-index:1;inset:auto;width:100%;padding:0;display:grid;justify-items:center;gap:24px;outline:none}
 .f1-mesa .reels-palco{width:100%;height:calc(var(--f1-w) * 16 / 9 + 16px);touch-action:pan-y;overscroll-behavior-x:contain}
-.f1-mesa .reels-cartao{top:8px;width:var(--f1-w);margin-left:calc(var(--f1-w) / -2);border-radius:18px;
+.f1-mesa .reels-cartao{top:8px;width:var(--f1-w);margin-left:calc(var(--f1-w) / -2);border-radius:14px;
   box-shadow:0 26px 44px -22px rgb(11 12 13 / .5),0 0 0 1px rgb(11 12 13 / .08)}
 .f1-mesa .reels-titulo{display:none}
 .f1-mesa .reels-som{top:10px;right:10px;bottom:auto;background:rgb(11 12 13 / .62);border-color:rgb(255 255 255 / .18);-webkit-backdrop-filter:none;backdrop-filter:none}
@@ -46,9 +51,10 @@ html.sem-mov .f1-filmes .duas-tintas .p{color:var(--tinta)}
 
 /* ---------- 4. web: o desenho à esquerda, os reels à direita do centro (a composição da prancha antiga) ---------- */
 @media (min-width:900px){
-  .f1-filmes{--f1-w:max(180px,min(280px,20vw,(calc(100*var(--u,1svh)) - 340px) * 9 / 16));padding:calc(13*var(--u,1svh)) 0 calc(12*var(--u,1svh))}
-  .f1-mesa{margin-top:calc(8*var(--u,1svh))}
-  .f1-tinta{width:min(700px,47vw);left:max(-40px,calc(var(--g) - 60px));top:50%;translate:0 -54%;opacity:.34}
+  .f1-filmes{--f1-w:max(170px,min(220px,15vw,(calc(100*var(--u,1svh)) - 340px) * 9 / 16));padding:0 0 calc(10*var(--u,1svh))}
+  .f1-filmes>.grelha{padding-top:calc(5*var(--u,1svh))}
+  .f1-mesa{margin-top:calc(6*var(--u,1svh));padding-top:0}
+  .f1-tinta{width:min(560px,38vw);left:max(-20px,calc(var(--g) - 30px));top:50%;translate:0 -47%;opacity:.36}
   .f1-mesa .reels{width:min(900px,62vw);margin-left:auto;margin-right:max(0px,calc(var(--g) - 20px))}
 }
 
