@@ -1,1 +1,69 @@
-/* f1-reels */
+/* f1-reels · 16/11 · 2.ª secção: «El Pantiera 32 / en movimiento.» + os reels oficiais em mesa de desenho.
+   Carrega depois de estilo.css. Usa classes novas (.f1-filmes, .f1-mesa, .f1-tinta) para não herdar as regras do
+   palco preso (.so-reels, .prancha, .banda-cfg), que ficam mortas no estilo.css. */
+
+/* ---------- 1. a junção hero → papel ----------
+   Antes: papel a 20 % de alfa por cima da fotografia (gradiente sRGB longo). Papel translúcido sobre mar escuro dá um
+   cinzento-azulado baço: era a «lama». Agora a fotografia assenta primeiro em tinta (#0b0c0d, escuro sobre escuro,
+   sem cinzento), com paragens em curva suave para não se ver o degrau, e o papel começa num corte limpo, como uma
+   folha pousada por cima da fotografia. */
+.hero::after{height:calc(36*var(--u,1svh));bottom:-1px;
+  background:linear-gradient(180deg,rgb(11 12 13 / 0) 0%,rgb(11 12 13 / .03) 14%,rgb(11 12 13 / .1) 28%,rgb(11 12 13 / .22) 42%,rgb(11 12 13 / .4) 56%,rgb(11 12 13 / .6) 70%,rgb(11 12 13 / .8) 83%,rgb(11 12 13 / .94) 93%,#0b0c0d 100%)}
+@supports (background:linear-gradient(in oklab,red,blue)){
+  .hero::after{background:linear-gradient(in oklab 180deg,rgb(11 12 13 / 0) 0%,rgb(11 12 13 / .03) 14%,rgb(11 12 13 / .1) 28%,rgb(11 12 13 / .22) 42%,rgb(11 12 13 / .4) 56%,rgb(11 12 13 / .6) 70%,rgb(11 12 13 / .8) 83%,rgb(11 12 13 / .94) 93%,#0b0c0d 100%)}
+}
+/* o bloco de papel de 12vh no fundo do hero (era o par da margem negativa da secção antiga): com a tinta por cima
+   virava uma faixa cinzenta chapada. A secção já não sobe por cima do hero, por isso sai. */
+.hero::before{display:none}
+.travessia{padding-top:0!important}
+
+/* ---------- 2. a secção: papel, tinta, título e duas tintas como na versão antiga ---------- */
+.f1-filmes{--papel:#ecebe7;--tinta:#0b0c0d;--f1-w:max(150px,min(57vw,236px,(calc(100*var(--u,1svh)) - 320px) * 9 / 16));
+  margin-top:0;padding:calc(12*var(--u,1svh)) 0 calc(11*var(--u,1svh));background:var(--papel);color:var(--tinta);overflow-x:clip;position:relative}
+.f1-filmes .duas-tintas::before{content:none}
+@media (min-width:901px){.f1-filmes .duas-tintas::before{content:"Reels oficiales"}}
+html.sem-mov .f1-filmes .duas-tintas .p{color:var(--tinta)}
+
+/* ---------- 3. a mesa: o traçado da popa em tinta leve e os reels pousados por cima ---------- */
+.f1-mesa{position:relative;margin-top:calc(6*var(--u,1svh));padding-top:44px}
+.f1-tinta{position:absolute;z-index:0;pointer-events:none;aspect-ratio:1400/1462;background:var(--tinta);opacity:.4;
+  -webkit-mask:url(../img/linhas-popa-1400.webp) center/contain no-repeat;mask:url(../img/linhas-popa-1400.webp) center/contain no-repeat;
+  /* telemóvel: o desenho sai pela esquerda e sobe acima do cartão; o casco e o hard top respiram à volta do reel */
+  width:min(136vw,600px);left:calc(50% - min(136vw,600px) * .59);top:-9%}
+.f1-mesa .reels{position:relative;z-index:1;inset:auto;width:100%;padding:0;display:grid;justify-items:center;gap:30px;outline:none}
+.f1-mesa .reels-palco{width:100%;height:calc(var(--f1-w) * 16 / 9 + 16px);touch-action:pan-y;overscroll-behavior-x:contain}
+.f1-mesa .reels-cartao{top:8px;width:var(--f1-w);margin-left:calc(var(--f1-w) / -2);border-radius:18px;
+  box-shadow:0 26px 44px -22px rgb(11 12 13 / .5),0 0 0 1px rgb(11 12 13 / .08)}
+.f1-mesa .reels-titulo{display:none}
+.f1-mesa .reels-som{top:10px;right:10px;bottom:auto;background:rgb(11 12 13 / .62);border-color:rgb(255 255 255 / .18);-webkit-backdrop-filter:none;backdrop-filter:none}
+/* o painel: uma régua sólida, sem vidro */
+.f1-mesa .reels-painel{gap:4px;padding:4px 6px;border-radius:999px;background:#f7f6f3;border:1px solid rgb(11 12 13 / .12);box-shadow:none;-webkit-backdrop-filter:none;backdrop-filter:none}
+.f1-mesa .reels-painel .reels-seta,.f1-mesa .reels-ig{position:static;width:44px;height:44px;background:transparent;border:0;box-shadow:none;-webkit-backdrop-filter:none;backdrop-filter:none;color:var(--tinta);border-radius:50%;transition:background-color var(--t-toque) var(--curva)}
+.f1-mesa .reels-painel .reels-seta:hover,.f1-mesa .reels-ig:hover{background:rgb(11 12 13 / .07)}
+.f1-mesa .reels-painel .reels-seta:focus-visible,.f1-mesa .reels-ig:focus-visible{outline:2px solid var(--teca);outline-offset:2px}
+.f1-mesa .reels-painel .reels-num{min-width:4.6em;font-size:.8125rem;color:rgb(11 12 13 / .72)}
+.f1-mesa .reels-sep{height:20px;background:rgb(11 12 13 / .14)}
+
+/* ---------- 4. web: o desenho à esquerda, os reels à direita do centro (a composição da prancha antiga) ---------- */
+@media (min-width:900px){
+  .f1-filmes{--f1-w:max(180px,min(280px,20vw,(calc(100*var(--u,1svh)) - 340px) * 9 / 16));padding:calc(13*var(--u,1svh)) 0 calc(12*var(--u,1svh))}
+  .f1-mesa{margin-top:calc(8*var(--u,1svh))}
+  .f1-tinta{width:min(700px,47vw);left:max(-40px,calc(var(--g) - 60px));top:50%;translate:0 -54%;opacity:.34}
+  .f1-mesa .reels{width:min(900px,62vw);margin-left:auto;margin-right:max(0px,calc(var(--g) - 20px))}
+}
+
+/* ---------- 5. entrada «pousa»: os reels assentam na mesa e o traçado desenha-se, uma vez ---------- */
+@media (prefers-reduced-motion:no-preference){
+  html.js:not(.sem-mov) .f1-mesa .reels-palco{translate:0 64px;rotate:3deg;opacity:0;transition:translate 1.2s var(--curva),rotate 1.2s var(--curva),opacity .8s var(--curva)}
+  html.js:not(.sem-mov) .f1-tinta{clip-path:inset(0 100% 0 0);transition:clip-path 1.8s cubic-bezier(.65,0,.35,1) .15s}
+  html.js:not(.sem-mov) .f1-mesa.pousou .reels-palco{translate:0 0;rotate:0deg;opacity:1}
+  html.js:not(.sem-mov) .f1-mesa.pousou .f1-tinta{clip-path:inset(0 0 0 0)}
+}
+
+/* web: o hero media 100svh + 22vh com a câmara só de 100svh; os 22vh de baixo eram tinta lisa, sem fotografia nem
+   texto (uma faixa morta de ~200 px antes do papel). O hero volta a 1 ecrã: a fotografia assenta em tinta e o papel
+   começa logo a seguir. No telemóvel o hero já mede 1 ecrã. */
+@media (min-width:900px){.hero{height:calc(100*var(--u,1svh))}}
+
+/* o botão do som só no reel da frente (nos vizinhos era ruído e um alvo de toque que não faz nada) */
+.f1-mesa .reels-cartao:not(.frente) .reels-som{opacity:0;pointer-events:none}

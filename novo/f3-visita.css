@@ -1,1 +1,83 @@
-/* f3-visita */
+/* f3-visita: «Agenda tu visita» abre com a fotografia do stand, «Presentes en» logo a seguir,
+   ícones de linha nas quatro opções do primeiro passo. Carrega depois de estilo.css e sobrepõe-no. */
+
+/* ---------- a secção: fundo liso, sem manchas de luz ---------- */
+.proposta{background:#f2f1ee !important}
+
+/* ---------- abertura: fotografia + título + feiras ---------- */
+.visita-topo{display:grid;grid-template-columns:minmax(0,1fr);margin:0 0 clamp(48px,7vw,96px)}
+.visita-foto{position:relative;margin:0;overflow:hidden;background:#1a1c1f}
+.visita-foto img{display:block;width:100%;height:100%;object-fit:cover}
+/* o véu fica POR CIMA da fotografia, do lado do título */
+.visita-foto::after{content:"";position:absolute;inset:0;pointer-events:none}
+.visita-t{color:var(--espuma)}
+.visita-feiras-k{margin:0 0 6px;font-size:.75rem;font-weight:600;font-stretch:112%;letter-spacing:.2em;text-transform:uppercase;color:#5a5e64}
+.visita-feiras ul{list-style:none;margin:0;padding:0}
+.visita-feiras li{border-top:1px solid rgb(11 12 13 / .14)}
+.visita-feiras li:last-child{border-bottom:1px solid rgb(11 12 13 / .14)}
+.visita-feiras a{display:flex;flex-direction:column;justify-content:center;gap:3px;min-height:64px;padding:12px 0;color:var(--tinta);text-decoration:none}
+.visita-feiras b{font-size:1.0625rem;font-weight:600;line-height:1.25;text-decoration:underline;text-decoration-color:transparent;text-underline-offset:4px;text-decoration-thickness:1px;transition:text-decoration-color var(--t-toque) var(--curva)}
+.visita-feiras a span{font-size:.875rem;line-height:1.35;color:#4f545a}
+@media (hover:hover){.visita-feiras a:hover b{text-decoration-color:currentColor}}
+.visita-feiras a:focus-visible{outline:2px solid var(--teca);outline-offset:4px;border-radius:4px}
+
+/* telemóvel e tablet: a fotografia a toda a largura, o título pousado no fundo dela */
+@media (max-width:900px){
+  .proposta{padding-top:0 !important}
+  .visita-topo{grid-template-rows:auto auto}
+  .visita-foto,.visita-cabeca{grid-area:1/1}
+  .visita-foto{aspect-ratio:10/11;max-height:min(78svh,640px);width:100%}
+  .visita-foto img{object-position:42% 50%}
+  .visita-foto::after{background:linear-gradient(180deg,rgb(11 12 13 / 0) 32%,rgb(11 12 13 / .6) 56%,rgb(11 12 13 / .92) 78%,rgb(11 12 13 / .97) 100%)}
+  .visita-cabeca{position:relative;z-index:1;align-self:end;padding:0 var(--g) 28px}
+  .visita-t{font-size:clamp(2.6rem,12vw,4rem) !important}
+  .visita-t em{color:var(--teca-2) !important}
+  .visita-feiras{grid-row:2;padding:28px var(--g) 0}
+  .visita-topo{margin-bottom:8px}
+  /* no telemóvel a placa vive junto da rota: a coluna lateral fica vazia e não deve ocupar espaço */
+  .ancora{display:none}
+  /* «Contacto» não cola ao valor na placa compacta */
+  .placa-slot .placa dl>div{grid-template-columns:104px minmax(0,1fr) !important}
+}
+
+/* computador: título e feiras à esquerda, fotografia à direita, as duas colunas à mesma altura */
+@media (min-width:901px){
+  .visita-topo{max-width:1320px;margin:0 auto clamp(56px,5vw,80px);padding-inline:var(--g);grid-template-columns:minmax(0,5fr) minmax(0,7fr);grid-template-rows:1fr auto;column-gap:clamp(32px,4.4vw,72px)}
+  .visita-cabeca{grid-column:1;grid-row:1;align-self:start;padding-top:8px}
+  .visita-t{color:var(--tinta);font-size:clamp(3rem,5.2vw,5rem) !important}
+  .visita-feiras{grid-column:1;grid-row:2;padding-top:40px}
+  .visita-foto{grid-column:2;grid-row:1/3;align-self:start;height:clamp(440px,38vw,540px);border-radius:20px}
+  .visita-foto img{position:absolute;inset:0;object-position:40% 50%}
+  .visita-foto::after{background:linear-gradient(180deg,rgb(11 12 13 / .12),rgb(11 12 13 / 0) 30%)}
+  /* a coluna lateral fica só com a placa */
+  .ancora .placa{margin:0 !important}
+}
+
+/* ---------- primeiro passo: quatro opções, um ícone de linha cada ---------- */
+/* um só nível de cartão: o contentor deixa de ser caixa */
+.cais-p{background:none !important;border:0 !important;border-radius:0 !important;overflow:visible !important;gap:10px !important;box-shadow:none !important;padding:0 !important}
+.cais-p .berco{display:grid !important;grid-template-columns:24px minmax(0,1fr) 22px !important;grid-template-rows:auto auto !important;align-content:center;column-gap:16px !important;row-gap:6px !important;min-height:92px;padding:20px !important;background:#fff !important;border:1px solid rgb(11 12 13 / .1) !important;box-shadow:none !important;transform:none !important}
+.berco-icone{grid-column:1;grid-row:1/3;align-self:center;width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;color:#3a3e44;transition:color var(--t-toque) var(--curva)}
+.cais-p .berco-nome{grid-column:2;grid-row:1;white-space:normal}
+.cais-p .berco-dados{grid-column:2/4;grid-row:2;margin-top:0;opacity:1 !important;color:#555a60;font-size:.875rem !important;letter-spacing:.01em !important;text-transform:none !important;font-stretch:100%;gap:7px;flex-wrap:wrap;row-gap:2px;white-space:normal}
+.cais-p .berco-marca{grid-column:3;grid-row:1;align-self:center;width:22px;height:22px;border-color:rgb(11 12 13 / .32)}
+.cais-p .berco-marca::after{left:7px;top:3.5px;border-color:#fff}
+@media (hover:hover){
+  .cais-p .berco:hover{border-color:rgb(11 12 13 / .32) !important}
+  .cais-p .berco:hover .berco-marca{border-color:rgb(11 12 13 / .6)}
+}
+.cais-p .berco:has(input:checked),.cais-p .berco.on{background:var(--mar) !important;border-color:var(--mar) !important;color:var(--espuma) !important;box-shadow:none !important}
+.cais-p .berco.on .berco-icone{color:var(--espuma)}
+.cais-p .berco.on .berco-nome{color:var(--espuma)}
+.cais-p .berco.on .berco-dados{color:var(--nevoa)}
+.cais-p .berco.on .berco-marca{background:var(--teca);border-color:var(--teca)}
+@media (min-width:601px){
+  .cais-p .berco{min-height:104px}
+}
+
+/* ---------- a placa: superfície sólida, sem vidro ---------- */
+.placa{background:#111316 !important;border:1px solid rgb(244 244 242 / .1) !important;-webkit-backdrop-filter:none !important;backdrop-filter:none !important;box-shadow:0 24px 48px -32px rgb(11 12 13 / .5) !important}
+
+@media (prefers-reduced-motion:reduce){
+  .visita-feiras b,.berco-icone{transition:none}
+}

@@ -1,4 +1,5 @@
-/* 13/11 (João: «todos os reels possíveis, com o design e a UI do carrossel da Liz Salvados, adaptado à Pantiera,
+/* 16/11: carrossel simples, sem palco preso ao scroll (js/51-pausas.js fica sem efeito: já não há reels-pin nem banda).
+   13/11 (João: «todos os reels possíveis, com o design e a UI do carrossel da Liz Salvados, adaptado à Pantiera,
    com o vidro da Apple»). Os 18 reels oficiais do canal da Pantiera: o do centro grande e a tocar, os outros atrás,
    mais pequenos e desfocados, de cada lado. Setas de vidro, contador, arrastar com o dedo, teclado, som por reel.
    Só se pede o vídeo do centro e dos dois vizinhos; nada toca enquanto a secção não está à vista. */
@@ -37,11 +38,15 @@
     const largo = innerWidth >= 900;
     lis.forEach((li, i) => {
       let d = i - cur; if (d > N / 2) d -= N; if (d < -N / 2) d += N; const a = Math.abs(d); // em roda: há sempre cartões dos dois lados
-      const x = d * (largo ? 46 : 34); // pirâmide: passo igual entre cartões // de um lado ao outro do ecrã
-      li.style.transform = `translate3d(${x}%,0,0) scale(${Math.max(0.6, 1 - a * 0.1)})`;
+      // 16/11 (cliente: «reels em escala reduzida, ligeiramente inclinados como na versão antiga»): fotografias pousadas
+      // numa mesa. O do centro inteiro e inclinado 1,5°; os vizinhos espreitam dos lados, mais pequenos e com outro ângulo.
+      // Sem desfoque (o filtro em vídeo custa e suja a imagem): a hierarquia faz-se com escala e opacidade.
+      const x = d * (largo ? 74 : 66); // em % da largura do próprio cartão
+      const rot = a === 0 ? 1.5 : (d < 0 ? -2 : 2.5) * (a === 1 ? 1 : 0.6);
+      li.style.transform = `translate3d(${x}%,0,0) scale(${Math.max(0.7, 1 - a * 0.13)}) rotate(${rot}deg)`;
       li.style.zIndex = String(50 - a);
-      const max = 2; li.style.opacity = a > max ? '0' : String(1 - a * 0.14);
-      li.style.filter = a ? `blur(${Math.min(10, a * 4)}px) saturate(.8)` : 'none';
+      const max = 1; li.style.opacity = a > max ? '0' : '1';
+      li.style.filter = 'none';
       li.style.pointerEvents = a > max ? 'none' : 'auto';
       li.classList.toggle('frente', a === 0);
       li.setAttribute('aria-hidden', a ? 'true' : 'false');

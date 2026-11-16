@@ -211,12 +211,11 @@
   }
 
   /* ---------- entre passos ---------- */
-  // no computador o título da secção fica logo abaixo do cabeçalho; no telemóvel não se volta ao título:
-  // a rota encosta ao cabeçalho, a placa compacta logo abaixo, e o passo com o seu primeiro campo antes das acções
-  const tituloSec = $('#proposta-t', sec);
+  // o título vive agora na fotografia de abertura: entre passos não se volta lá, volta-se à rota.
+  // no telemóvel a rota encosta ao cabeçalho, a placa compacta logo abaixo, e o passo com o seu primeiro campo antes das acções
   const estreito = matchMedia('(max-width: 900px)');
   const slot = $('[data-placa-slot]', sec);
-  const tituloVisivel = () => (estreito.matches ? rolaPara(rota, 8, true) : rolaPara(tituloSec, 16));
+  const tituloVisivel = () => (estreito.matches ? rolaPara(rota, 8, true) : rolaPara(rota, 24));
   const fechaPlaca = () => { placa.classList.remove('aberta'); bPlaca?.setAttribute('aria-expanded', 'false'); const t = bPlaca?.querySelector('span'); if (t) t.textContent = 'Ver todo'; };
   function irPara(n, rolar = true) {
     const dir = n >= passo ? 'entra-d' : 'entra-e';
