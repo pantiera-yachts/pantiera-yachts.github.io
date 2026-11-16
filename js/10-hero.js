@@ -54,7 +54,7 @@
       video.before(pase);
       if (vert) return filmeEmCanvas();
       // computador: as cenas em fundidos (2 imagens por cena)
-      const imgs = [0, 1, 2, 3, 4, 5].map((i) => { const im = new Image(); im.alt = ''; im.decoding = 'async'; im.src = `media/pase/h${i}.webp`; pase.appendChild(im); return im; });
+      const imgs = [0, 1, 2, 3, 4, 5].map((i) => { const im = new Image(); im.alt = ''; im.decoding = 'async'; im.src = `media/pase/p${i}.webp`; pase.appendChild(im); return im; });
       let k = -1;
       const passa = () => { if (vivo || document.hidden) return; k = (k + 1) % imgs.length; imgs.forEach((im, j) => im.classList.toggle('on', j === k)); if (marca) marca(Math.floor(k / 2)); };
       (imgs[0].decode ? imgs[0].decode() : Promise.resolve()).catch(() => {}).then(() => { passa(); heroPronto(); setInterval(passa, 2800); });

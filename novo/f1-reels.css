@@ -13,10 +13,10 @@
 .hero::after{height:calc(30*var(--u,1svh));bottom:-1px;
   background:linear-gradient(180deg,rgb(11 12 13 / 0.000) 0.0%,rgb(11 12 13 / 0.072) 8.3%,rgb(11 12 13 / 0.184) 16.7%,rgb(11 12 13 / 0.311) 25.0%,rgb(11 12 13 / 0.440) 33.3%,rgb(11 12 13 / 0.566) 41.7%,rgb(11 12 13 / 0.681) 50.0%,rgb(11 12 13 / 0.782) 58.3%,rgb(11 12 13 / 0.866) 66.7%,rgb(11 12 13 / 0.929) 75.0%,rgb(11 12 13 / 0.972) 83.3%,rgb(11 12 13 / 0.994) 91.7%,#0b0c0d 100%)}
 .travessia{padding-top:0!important}
-.f1-bruma{position:relative;height:calc(44*var(--u,1svh));min-height:300px;margin-top:-1px;
+.f1-bruma{position:relative;height:calc(14*var(--u,1svh));min-height:104px;margin-top:-1px;
   background:linear-gradient(180deg,#0b0c0d 0.0%,#0f1213 6.25%,#131a1d 12.5%,#1a2429 18.75%,#223137 25.0%,#2d3f47 31.25%,#3b5059 37.5%,#4b626b 43.75%,#5e757e 50.0%,#728890 56.25%,#889ba2 62.5%,#9eadb2 68.75%,#b3bdc0 75.0%,#c7cccc 81.25%,#d7d9d6 87.5%,#e4e3df 93.75%,#ecebe7 100.0%)}
 .f1-bruma::after{content:"";position:absolute;inset:0;pointer-events:none;opacity:.3;mix-blend-mode:soft-light;-webkit-mask:linear-gradient(180deg,transparent 0%,transparent 14%,#000 40%,#000 70%,transparent 96%);mask:linear-gradient(180deg,transparent 0%,transparent 14%,#000 40%,#000 70%,transparent 96%);background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 0 0 0 0 1'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E") 0 0/180px 180px}
-@media (min-width:900px){.hero::after{height:calc(46*var(--u,1svh))}.f1-bruma{height:calc(50*var(--u,1svh))}}
+@media (min-width:900px){.hero::after{height:calc(46*var(--u,1svh))}.f1-bruma{height:calc(22*var(--u,1svh))}}
 
 /* ---------- 2. a secção: papel, tinta, título e duas tintas como na versão antiga ---------- */
 .f1-filmes{--papel:#ecebe7;--tinta:#0b0c0d;--f1-w:max(140px,min(44vw,190px,(calc(100*var(--u,1svh)) - 320px) * 9 / 16));--f1-d:min(76vw,330px);
@@ -73,3 +73,9 @@ html.sem-mov .f1-filmes .duas-tintas .p{color:var(--tinta)}
 
 /* o botão do som só no reel da frente (nos vizinhos era ruído e um alvo de toque que não faz nada) */
 .f1-mesa .reels-cartao:not(.frente) .reels-som{opacity:0;pointer-events:none}
+
+/* ---------- 5. hero no telemóvel em pé (16/11): o filme vertical já traz o barco no terço de cima e a água a
+   fundir-se na tinta por baixo; alinha-se pelo topo para o barco ficar por cima do título em qualquer altura de ecrã ---------- */
+@media (max-width:899px) and (orientation:portrait){
+  .hero .hero-video,.hero .hero-pase-tela,.hero .hero-poster img{object-fit:cover!important;object-position:50% 0!important;top:0!important;height:100%!important;translate:none!important;-webkit-mask-image:none!important;mask-image:none!important}
+}

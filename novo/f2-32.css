@@ -29,7 +29,7 @@
 .p32-rotulo{display:flex;justify-content:space-between;gap:12px;margin:0 0 14px;font-size:var(--f-mi);font-weight:500;font-stretch:112%;letter-spacing:.2em;text-transform:uppercase;color:var(--nevoa)}
 .p32-rotulo span:first-child{color:var(--espuma)}
 .p32-tabs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));column-gap:20px;border-bottom:1px solid var(--p32-fio)}
-.p32-tab{position:relative;display:grid;grid-template-columns:2rem minmax(0,1fr);align-items:center;min-height:52px;margin:0;padding:8px 0;border:0;border-top:1px solid var(--p32-fio);background:none;color:var(--espuma-2);font:inherit;text-align:left;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.p32-tab{position:relative;display:grid;grid-template-columns:minmax(0,1fr);align-items:center;min-height:52px;margin:0;padding:8px 0;border:0;border-top:1px solid var(--p32-fio);background:none;color:var(--espuma-2);font:inherit;text-align:left;cursor:pointer;-webkit-tap-highlight-color:transparent}
 .p32-tab::before{content:"";position:absolute;left:0;right:0;top:-1px;height:1px;background:var(--espuma);transform:scaleX(0);transform-origin:left}
 .p32-tab[aria-selected="true"]{color:var(--espuma)}
 .p32-tab[aria-selected="true"]::before{transform:none}
@@ -90,7 +90,7 @@ html:not(.js) .p32-pan[hidden]{visibility:visible}
   .p32-regua{column-gap:8px}
   .p32-plano{margin-top:32px}
   .p32-tabs{column-gap:14px}
-  .p32-tab{grid-template-columns:1.75rem minmax(0,1fr);min-height:52px;padding:6px 0}
+  .p32-tab{min-height:48px;padding:6px 0}
   .p32-t{font-size:.9375rem}
   .p32-txt{font-size:.9375rem}
   .p32-obra{font-size:.8125rem}
