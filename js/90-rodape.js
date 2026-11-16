@@ -28,21 +28,6 @@
   });
 })();
 (() => {
-  const { $, reduz } = DA;
-  /* «Reducir movimiento»: guarda a escolha e recarrega, para todas as secções lerem a preferência desde o início
-     (quem a aplica é o script em linha do 90-fim.html, antes dos módulos) */
-  const CH = 'pt-mov', bt = $('[data-mov]');
-  if (bt) {
-    const meu = document.documentElement.classList.contains('sem-mov');
-    const doSistema = false; // (14/11) a preferência do sistema já não desliga o movimento: o interruptor só mostra a escolha feita aqui
-    bt.setAttribute('aria-checked', String(meu || doSistema));
-    // quando é o sistema a pedir menos movimento, o interruptor mostra-o e não o contraria
-    if (doSistema) { bt.disabled = true; bt.title = 'Activado en los ajustes de tu dispositivo'; }
-    bt.addEventListener('click', () => {
-      const novo = bt.getAttribute('aria-checked') !== 'true';
-      try { if (novo) localStorage.setItem(CH, 'reduz'); else localStorage.removeItem(CH); } catch (e) { return; }
-      bt.setAttribute('aria-checked', String(novo));
-      location.reload();
-    });
-  }
+  /* (16/11) o interruptor «Reducir movimiento» saiu do rodapé: quem o tinha ligado deixa de ficar preso a essa escolha */
+  try { localStorage.removeItem('pt-mov'); } catch (e) {}
 })();
