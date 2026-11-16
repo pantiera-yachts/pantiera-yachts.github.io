@@ -460,6 +460,10 @@
 (function(){try{if(localStorage.getItem('pt-mov')!=='reduz')return;document.documentElement.classList.add('sem-mov');var mm=window.matchMedia.bind(window);window.matchMedia=function(q){if(/prefers-reduced-motion:\s*reduce/.test(q))return{matches:true,media:q,onchange:null,addEventListener:function(){},removeEventListener:function(){},addListener:function(){},removeListener:function(){},dispatchEvent:function(){return false}};return mm(q)}}catch(e){}})();</script>
 <!-- o CSS completo: no body não bloqueia o desenho, e os scripts a seguir esperam por ele (medidas certas) -->
 <link rel="stylesheet" href="estilo.css?v=97f2e28e" onload="document.documentElement.classList.add('css-ok')">
+<link rel="stylesheet" href="novo/f1-reels.css">
+<link rel="stylesheet" href="novo/f2-32.css">
+<link rel="stylesheet" href="novo/f3-visita.css">
+<link rel="stylesheet" href="novo/f4-rodape.css">
 <script src="js/00-core.js?v=e87224d5" defer></script>
 <script src="js/10-hero.js?v=d10535e2" defer></script>
 <script src="js/15-menu.js?v=0618c935" defer></script>
@@ -478,6 +482,9 @@
 <script src="js/52-taller.js?v=5c028fbd" defer></script>
 <script src="js/47-reels.js?v=fa518849" defer></script>
 <script src="js/86-paginas.js?v=0d7e7c5e" defer></script>
+<script src="novo/f1-reels.js" defer></script>
+<script src="novo/f2-32.js" defer></script>
+<script src="novo/f3-visita.js" defer></script>
 <script src="js/90-rodape.js?v=cf5cbc75" defer></script>
 </body>
 </html>
